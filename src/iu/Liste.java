@@ -44,6 +44,7 @@ public class Liste extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JScrollPane jsp;
+	private JLabel lblListeDeRdv;
 
 	/**
 	 * Launch the application.
@@ -113,14 +114,19 @@ public class Liste extends JFrame {
 		contentPane.setLayout(null);
 		// créer une table de ListeRDV
 		table = new JTable();
-		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		table.setBackground(new Color(204, 255, 204));
+		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		jsp= new JScrollPane(table);
-		jsp.setBackground(new Color(204, 255, 204));
-		jsp.setBounds(68, 5, 463, 448);
+		jsp.setBounds(10, 55, 516, 381);
 
 		//Définir rendu spécifique à colonne selon son Type
 		contentPane.add(jsp);
+		
+		lblListeDeRdv = new JLabel("Liste de RDV");
+		lblListeDeRdv.setForeground(new Color(255, 255, 255));
+		lblListeDeRdv.setFont(new Font("Yu Gothic Medium", Font.BOLD, 23));
+		lblListeDeRdv.setBounds(10, 11, 516, 33);
+		contentPane.add(lblListeDeRdv);
 		
 		DisplayList("listerdv");
 		

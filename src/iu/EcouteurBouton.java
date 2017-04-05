@@ -17,7 +17,7 @@ public class EcouteurBouton implements ActionListener {
 			JButton btn=(JButton)e.getSource();
 			switch (btn.getName()) {
 				case "Ajoute":
-					ajoute aj  = new ajoute();
+					Ajouter aj  = new Ajouter();
 					aj.setVisible(true);
 					
 					break;

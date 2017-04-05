@@ -7,8 +7,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Dao.TableEntity;
+import manager.Manager;
 import tools.tools;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -33,6 +36,8 @@ public class ajoute extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	SpinnerDateModel spinnerDate;
+	SpinnerDateModel spinnerDuree;
 
 	/**
 	 * Launch the application.
@@ -128,6 +133,7 @@ public class ajoute extends JFrame {
 		btnAjouter.setBounds(134, 286, 89, 28);
 		contentPane.add(btnAjouter);
 		
+		
 		JLabel lblCommentaire = new JLabel("Commentaire :");
 		lblCommentaire.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblCommentaire.setBounds(20, 194, 112, 14);
@@ -140,5 +146,18 @@ public class ajoute extends JFrame {
 		
 		tools.Center(this);
 		
+	}
+	
+	public void actionPerformed(ActionEvent arg0){
+		if(!textField.getText().trim().equals("")){
+			Manager em = null;
+			em = new Manager("listerdv");
+			TableEntity items = new TableEntity();
+			items.values.add(null);
+			
+			items.values.add(spinnerDate.getValue());
+			items.values.add(spinnerDuree.getValue());
+			items.values.add(textField.getText());
+		}
 	}
 }
