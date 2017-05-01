@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 
+import Dao.Dao;
+import Dao.TableEntity;
+import manager.Manager;
+
 public class EcouteurBouton implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -34,7 +38,9 @@ public class EcouteurBouton implements ActionListener {
 					
 					break;
 				default:
-					System.out.println("Click sur refresh");
+					Manager em = new Manager("listerdv");
+					TableEntity items = new TableEntity();
+					
 					break;
 			}
 		}else if(e.getSource() instanceof JMenuItem){

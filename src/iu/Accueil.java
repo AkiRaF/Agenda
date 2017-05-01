@@ -27,8 +27,11 @@ import java.util.Locale;
 import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
+import Dao.TableEntity;
+import iu.Liste.MonModele;
 import manager.Manager;
 import tools.tools;
 import java.awt.Panel;
@@ -44,6 +47,8 @@ public class Accueil extends JFrame {
 	Calendar cal = new GregorianCalendar();
 	JLabel label;
 	private JTable table;
+	private JScrollPane jsp;
+	private JLabel lblListeDeRdv;
 	
 
 	public static void main(String[] args) {
@@ -62,7 +67,7 @@ public class Accueil extends JFrame {
 	}
 
 	public Accueil() {
-		setTitle("Agenda");
+		setTitle("Liste de RDV");
 		
 		fenetre_courante=this;
 		
@@ -76,7 +81,7 @@ public class Accueil extends JFrame {
 				}
 			}
 		});
-		setBounds(100, 100, 565, 380);
+		setBounds(100, 100, 796, 380);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,14 +100,14 @@ public class Accueil extends JFrame {
 		btnNewButton_1.setForeground(Color.WHITE);
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton_1.setBackground(new Color(0, 100, 0));
-		btnNewButton_1.setBounds(0, 37, 86, 39);
+		btnNewButton_1.setBounds(0, 0, 86, 39);
 		panel.add(btnNewButton_1);
 		
 		JButton btnNewButton = new JButton("Modifier");
 		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnNewButton.setBackground(new Color(0, 100, 0));
-		btnNewButton.setBounds(0, 75, 86, 39);
+		btnNewButton.setBounds(0, 37, 86, 39);
 		panel.add(btnNewButton);
 		
 		JButton btnDconnexion = new JButton("");
@@ -110,20 +115,34 @@ public class Accueil extends JFrame {
 		panel.add(btnDconnexion);
 		btnDconnexion.setBackground(new Color(95, 158, 160));
 		btnDconnexion.setIcon(new ImageIcon(Accueil.class.getResource("/images/1481726811_Exit.png")));
+		btnDconnexion.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				int bouton_clique = tools.Confermation("Etes vous sûr ?");
+				if(bouton_clique==JOptionPane.YES_OPTION) {
+					System.exit(0);
+					
+				}
+					
+			}
+		});
 		
 		JButton btnSupprimer = new JButton("Supprimer");
 		btnSupprimer.setBackground(new Color(0, 100, 0));
 		btnSupprimer.setForeground(Color.WHITE);
 		btnSupprimer.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnSupprimer.setBounds(0, 113, 86, 39);
+		btnSupprimer.setBounds(0, 75, 86, 39);
 		panel.add(btnSupprimer);
-		
-		JButton btnListe = new JButton("Liste");
-		btnListe.setForeground(Color.WHITE);
-		btnListe.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnListe.setBackground(new Color(0, 100, 0));
-		btnListe.setBounds(0, 0, 86, 39);
-		panel.add(btnListe);
+		btnSupprimer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
 		
 		
 		//
@@ -131,22 +150,19 @@ public class Accueil extends JFrame {
 		JPanel panel_2 = new JPanel();
 		panel_2.setForeground(Color.WHITE);
 		panel_2.setBackground(new Color(0, 100, 0));
-		panel_2.setBounds(0, 0, 549, 41);
+		panel_2.setBounds(0, 0, 780, 41);
 		contentPane.add(panel_2);
 		panel_2.setLayout(null);
 		
-		JLabel lblEmploiDuTemps = new JLabel("nomPersonne");
-		lblEmploiDuTemps.setBounds(272, 0, 115, 41);
-		panel_2.add(lblEmploiDuTemps);
-		lblEmploiDuTemps.setBackground(Color.WHITE);
-		lblEmploiDuTemps.setForeground(Color.WHITE);
-		lblEmploiDuTemps.setFont(new Font("Arial", Font.BOLD, 16));
 		
-		JLabel label = new JLabel(" Emploi du temps de");
+		
+		JLabel label = new JLabel(" Liste de Rendez-vous");
+		label.setHorizontalAlignment(label.CENTER);
 		label.setForeground(Color.WHITE);
 		label.setFont(new Font("Arial", Font.BOLD, 16));
 		label.setBackground(Color.WHITE);
-		label.setBounds(104, 0, 162, 41);
+		label.setBounds(0, 0, 513, 41);
+		label.setAlignmentX(CENTER_ALIGNMENT);
 		panel_2.add(label);
 		
 		//
@@ -162,27 +178,89 @@ public class Accueil extends JFrame {
 		
 		EcouteurBouton ecouteur = new EcouteurBouton();
 		btnDconnexion.setName("Deconn");
-		btnListe.setName("Liste");
 		btnSupprimer.setName("Supp");
 		btnNewButton.setName("Modif");
 		btnNewButton_1.setName("Ajoute");
-		
-		
-		btnListe.addActionListener(ecouteur);
 		btnNewButton.addActionListener(ecouteur);
 		btnDconnexion.addActionListener(ecouteur);
 		btnNewButton_1.addActionListener(ecouteur);
 		btnSupprimer.addActionListener(ecouteur);
+		createJtable();
 		
 		tools.Center(this);
 	}
-	
-	private void calendar(){
+
+	private void DisplayList(String nomtable){
+		//Récupérer les détailles de BDD par "Manager".
+		
+		Manager m= new Manager(nomtable);
+		
+		List<TableEntity> data = m.GetListe();
+		List<String> columns = m.GetColonnes();
+		
+		String[] colonnes = new String[columns.size()];
+		columns.toArray(colonnes);	
+		
+		//Création MODELE
+		MonModele modele = new MonModele(colonnes,data );
+		table.setModel(modele); //Associer modele de données à la JTable (grille)
 		
 	}
 	
-	void updateMonth() {
-	    
-	 
-	  }
+private void createJtable() {
+		contentPane.setLayout(null);
+		// créer une table de ListeRDV
+		table = new JTable();
+		table.setBackground(Color.WHITE);
+		table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		jsp= new JScrollPane(table);
+		jsp.setBounds(90, 45, 680, 285);
+
+		//Définir rendu spécifique à colonne selon son Type
+		contentPane.add(jsp);
+		
+		lblListeDeRdv = new JLabel("Liste de RDV");
+		lblListeDeRdv.setForeground(new Color(255, 255, 255));
+		lblListeDeRdv.setFont(new Font("Yu Gothic Medium", Font.BOLD, 23));
+		lblListeDeRdv.setBounds(10, 11, 516, 33);
+		contentPane.add(lblListeDeRdv);
+		
+		DisplayList("listerdv");
+		
+		tools.Center(this);
+}
+	
+class MonModele extends AbstractTableModel{		
+		
+		//Récupérer les données de la table "listerdv".
+		
+		String[] colonnes;
+		List<TableEntity> data; //appel data dans la table liste
+		
+		
+		public MonModele(String[] colonnes, List<TableEntity> data) {
+			this.colonnes= colonnes;
+			this.data=data;
+		}
+
+		@Override
+		public int getRowCount() { //compte la taille de rangée
+			return data.size();
+		}
+		@Override
+		public int getColumnCount() { //compte le longueur de colonne
+			return colonnes.length;
+		}
+		@Override
+		public Object getValueAt(int rowIndex, int columnIndex) { // get les index de chaque colonne et rangée 
+			return data.get(rowIndex).values.get(columnIndex);
+		}
+		
+		@Override
+		public String getColumnName(int columnIndex) { //get nom de colonne
+			return colonnes[columnIndex];
+		}
+		
+	}
+	
 }

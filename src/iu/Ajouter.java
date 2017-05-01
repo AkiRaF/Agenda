@@ -1,41 +1,29 @@
 package iu;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
-
-import Dao.TableEntity;
-import iu.ListeFenetre.JTableBDModele;
-import javafx.scene.control.ComboBox;
-import manager.Manager;
-import tools.tools;
-import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.Color;
-
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.DropMode;
-import javax.swing.JSpinner;
-import java.util.Date;
-import java.util.List;
 import java.util.Calendar;
-import javax.swing.JComboBox;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
+
+import Dao.TableEntity;
+import manager.Manager;
+import tools.tools;
 
 public class Ajouter extends JFrame{
 	
@@ -43,6 +31,7 @@ public class Ajouter extends JFrame{
 	private JPanel contentPane;
 	private JTextField textField_3;
 	private JTextField textField_1;
+	private JTextField textUtili;
 	private SpinnerDateModel spinnerDate;
 	private SpinnerDateModel spinnerDuree;
 
@@ -66,7 +55,7 @@ public class Ajouter extends JFrame{
 	public Ajouter() {
 		
 		fenetre_courante=this;
-		
+		  
 	
 		setTitle("Ajouter RDV");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -132,6 +121,11 @@ public class Ajouter extends JFrame{
 		label.setBounds(20, 197, 112, 14);
 		contentPane.add(label);
 		
+//		textUtili = new JTextField();
+//		textUtili.setBounds(152, 65, 153, 20);
+//		textUtili.add(textUtili);
+//		textUtili.setColumns(10);
+		
 		textField_3 = new JTextField();
 		textField_3.setBounds(152, 242, 153, 72);
 		contentPane.add(textField_3);
@@ -166,21 +160,14 @@ public class Ajouter extends JFrame{
 		//JComBox
 		
 		
-		Manager em = new Manager("utilisateur");
-		List<TableEntity> Values = em.GetListe();
-		List<String> cols = em.GetColonnes();
-		String[] colonnes = new String[cols.size()];
-		TableEntity val = new TableEntity();
-		
+		/*Manager em = new Manager("utilisateur");
 
 		
-		
-		JComboBox comboBox = new JComboBox(cols.toArray(colonnes));
+		String[] xx=new String[]{};
+		JComboBox comboBox = new JComboBox(xx);
 		comboBox.setBounds(152, 65, 153, 20);
 		
-		contentPane.add(comboBox);
-	
-	
+		contentPane.add(comboBox);*/
 		
 		//Jbutton
 		
@@ -195,7 +182,7 @@ public class Ajouter extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!textField_1.getText().trim().equals("")){
+				if(!textUtili.getText().trim().equals("")){
 					
 					Manager em = new Manager("listerdv");
 					
@@ -205,7 +192,7 @@ public class Ajouter extends JFrame{
 					try {
 						items.values.add(null);
 						//items.values.add(id);
-						items.values.add(comboBox.getSelectedItem());
+						//items.values.add(textUtili.getText());
 						items.values.add(spinnerDate.getValue());
 						items.values.add(spinnerDuree.getValue());
 						items.values.add(textField_1.getText());
@@ -239,22 +226,39 @@ public class Ajouter extends JFrame{
 		
 	}
 	
-	/*private void CreateComboValue() {
-		Manager em = new Manager("utilisateur");
-		List<TableEntity> Values = em.GetListe();
-		
-		JComboBox cmbValues = new JComboBox(Values.toArray());
-		 cmbValues.setBounds(12, 0, 179, 35);
-		contentPane.add(cmbValues);
-		
 
-		cmbValues.addActionListener(new ActionListener() {		
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-	}*/
+	class MonModele extends AbstractTableModel{		
+		
+		//Récupérer les données de la table "listerdv".
+		
+		String[] colonnes;
+		List<TableEntity> data; //appel data dans la table liste
+		
+		
+		public MonModele(String[] colonnes, List<TableEntity> data) {
+			this.colonnes= colonnes;
+			this.data=data;
+		}
+
+		@Override
+		public int getRowCount() { //compte la taille de rangée
+			return data.size();
+		}
+		@Override
+		public int getColumnCount() { //compte le longueur de colonne
+			return colonnes.length;
+		}
+		@Override
+		public Object getValueAt(int rowIndex, int columnIndex) { // get les index de chaque colonne et rangée 
+			return data.get(rowIndex).values.get(columnIndex);
+		}
+		
+		@Override
+		public String getColumnName(int columnIndex) { //get nom de colonne
+			return colonnes[columnIndex];
+		}
+		
+	}	
 		
 	
 }
