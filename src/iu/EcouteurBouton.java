@@ -6,10 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 
-import Dao.Dao;
-import Dao.TableEntity;
-import manager.Manager;
-
 public class EcouteurBouton implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -19,32 +15,6 @@ public class EcouteurBouton implements ActionListener {
 			//click sur bouton..
 			
 			JButton btn=(JButton)e.getSource();
-			switch (btn.getName()) {
-				case "Ajoute":
-					Ajouter aj  = new Ajouter();
-					aj.setVisible(true);
-					
-					break;
-					
-				case "Liste":
-					Liste lt  = new Liste();
-					lt.setVisible(true);
-					
-					break;
-				case "Deconn":
-					
-					Login lg= new Login();
-					lg.setVisible(true);
-					
-					break;
-				default:
-					Manager em = new Manager("listerdv");
-					TableEntity items = new TableEntity();
-					
-					break;
-			}
-		}else if(e.getSource() instanceof JMenuItem){
-			//click sur option menu..
-		}	
+		}
 	}
 }

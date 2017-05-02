@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import Dao.TableEntity;
 import iu.Liste.MonModele;
@@ -43,12 +44,11 @@ public class Accueil extends JFrame {
 
 	private JPanel contentPane;
 	private Accueil fenetre_courante;
-	DefaultTableModel model;
+	
 	Calendar cal = new GregorianCalendar();
 	JLabel label;
 	private JTable table;
 	private JScrollPane jsp;
-	private JLabel lblListeDeRdv;
 	
 
 	public static void main(String[] args) {
@@ -96,19 +96,21 @@ public class Accueil extends JFrame {
 		    
 		//
 		
-		JButton btnNewButton_1 = new JButton("Ajouter");
-		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton_1.setBackground(new Color(0, 100, 0));
-		btnNewButton_1.setBounds(0, 0, 86, 39);
-		panel.add(btnNewButton_1);
-		
-		JButton btnNewButton = new JButton("Modifier");
-		btnNewButton.setForeground(Color.WHITE);
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnNewButton.setBackground(new Color(0, 100, 0));
-		btnNewButton.setBounds(0, 37, 86, 39);
-		panel.add(btnNewButton);
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.setForeground(Color.WHITE);
+		btnAjouter.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnAjouter.setBackground(new Color(0, 100, 0));
+		btnAjouter.setBounds(0, 0, 86, 39);
+		panel.add(btnAjouter);
+		btnAjouter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Ajouter aj  = new Ajouter();
+				aj.setVisible(true);
+				
+			}
+		});
 		
 		JButton btnDconnexion = new JButton("");
 		btnDconnexion.setBounds(0, 246, 86, 39);
@@ -122,7 +124,9 @@ public class Accueil extends JFrame {
 				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				int bouton_clique = tools.Confermation("Etes vous sûr ?");
 				if(bouton_clique==JOptionPane.YES_OPTION) {
-					System.exit(0);
+					Login lg = new Login();
+					lg.setVisible(true);
+					dispose();
 					
 				}
 					
@@ -133,13 +137,52 @@ public class Accueil extends JFrame {
 		btnSupprimer.setBackground(new Color(0, 100, 0));
 		btnSupprimer.setForeground(Color.WHITE);
 		btnSupprimer.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnSupprimer.setBounds(0, 75, 86, 39);
+		btnSupprimer.setBounds(0, 39, 86, 39);
 		panel.add(btnSupprimer);
 		btnSupprimer.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				int index = table.getSelectedRow();
+				if(index < 0){
+					JOptionPane.showMessageDialog(null,"Sélectionne une ligne à supprimer !");
+				}else{
+//					Manager m = new Manager("listerdv");
+//					TableEntity items = new TableEntity();
+					//JOptionPane.showMessageDialog(null,"row select !");
+					
+					int idRdv = Integer.parseInt(table.getValueAt(index, 0).toString());
+					Object[] options = { "Yes", "No" };
+			
+					int n = JOptionPane.showOptionDialog(null,
+					"Est-ce que voulez-vous supprimer : "+idRdv+"?",
+					"Êtes-vous sûre ? Confirmation :",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, options,
+					options[1]);
+					
+					if(n==JOptionPane.YES_OPTION){
+						Manager m = new Manager("listerdv");
+						m.Supprimer(idRdv);
+					
+					}
+						
+				}
+			}
+
+		});
+		
+		JButton btnRafrachir = new JButton("Rafra\u00EEchir...");
+		btnRafrachir.setBackground(new Color(0, 100, 0));
+		btnRafrachir.setForeground(Color.WHITE);
+		btnRafrachir.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnRafrachir.setBounds(-3, 212, 89, 23);
+		panel.add(btnRafrachir);
+		btnRafrachir.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createJtable();
 				
 			}
 		});
@@ -159,17 +202,11 @@ public class Accueil extends JFrame {
 		JLabel label = new JLabel(" Liste de Rendez-vous");
 		label.setHorizontalAlignment(label.CENTER);
 		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Arial", Font.BOLD, 16));
+		label.setFont(new Font("Arial", Font.BOLD, 23));
 		label.setBackground(Color.WHITE);
-		label.setBounds(0, 0, 513, 41);
+		label.setBounds(0, 0, 780, 41);
 		label.setAlignmentX(CENTER_ALIGNMENT);
 		panel_2.add(label);
-		
-		//
-		table = new JTable();
-		table.setBackground(new Color(204, 255, 204));
-		table.setBounds(534, 52, -442, 278);
-		JScrollPane pane = new JScrollPane(table);
 		
 		
 		//
@@ -179,12 +216,14 @@ public class Accueil extends JFrame {
 		EcouteurBouton ecouteur = new EcouteurBouton();
 		btnDconnexion.setName("Deconn");
 		btnSupprimer.setName("Supp");
-		btnNewButton.setName("Modif");
-		btnNewButton_1.setName("Ajoute");
-		btnNewButton.addActionListener(ecouteur);
+		btnAjouter.setName("Ajoute");
+		btnRafrachir.setName("Refresh");
+			
 		btnDconnexion.addActionListener(ecouteur);
-		btnNewButton_1.addActionListener(ecouteur);
+		btnAjouter.addActionListener(ecouteur);
 		btnSupprimer.addActionListener(ecouteur);
+		btnRafrachir.addActionListener(ecouteur);
+		
 		createJtable();
 		
 		tools.Center(this);
@@ -204,7 +243,7 @@ public class Accueil extends JFrame {
 		//Création MODELE
 		MonModele modele = new MonModele(colonnes,data );
 		table.setModel(modele); //Associer modele de données à la JTable (grille)
-		
+
 	}
 	
 private void createJtable() {
@@ -218,12 +257,6 @@ private void createJtable() {
 
 		//Définir rendu spécifique à colonne selon son Type
 		contentPane.add(jsp);
-		
-		lblListeDeRdv = new JLabel("Liste de RDV");
-		lblListeDeRdv.setForeground(new Color(255, 255, 255));
-		lblListeDeRdv.setFont(new Font("Yu Gothic Medium", Font.BOLD, 23));
-		lblListeDeRdv.setBounds(10, 11, 516, 33);
-		contentPane.add(lblListeDeRdv);
 		
 		DisplayList("listerdv");
 		
@@ -261,6 +294,7 @@ class MonModele extends AbstractTableModel{
 			return colonnes[columnIndex];
 		}
 		
-	}
-	
 }
+
+}
+

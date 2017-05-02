@@ -1,39 +1,52 @@
 package iu;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
+
+import com.mysql.fabric.xmlrpc.base.Value;
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
+
+import Dao.TableEntity;
+import javafx.scene.control.ComboBox;
+import manager.Manager;
+import tools.tools;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Calendar;
-import java.util.List;
+import java.awt.Color;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.DropMode;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
-
-import Dao.TableEntity;
-import manager.Manager;
-import tools.tools;
+import java.util.Date;
+import java.util.List;
+import java.util.Calendar;
+import javax.swing.JComboBox;
 
 public class Ajouter extends JFrame{
 	
 	private Ajouter fenetre_courante;
 	private JPanel contentPane;
-	private JTextField textField_3;
-	private JTextField textField_1;
-	private JTextField textUtili;
+	private JTextField txtCommentaire;
+	private JTextField txtNomClient;
 	private SpinnerDateModel spinnerDate;
 	private SpinnerDateModel spinnerDuree;
+	private JTextField txtNomUtilisateur;
 
 	/**
 	 * Launch the application.
@@ -55,7 +68,7 @@ public class Ajouter extends JFrame{
 	public Ajouter() {
 		
 		fenetre_courante=this;
-		  
+		
 	
 		setTitle("Ajouter RDV");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -98,7 +111,7 @@ public class Ajouter extends JFrame{
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 100, 0));
-		panel.setBounds(0, 0, 434, 36);
+		panel.setBounds(0, 0, 339, 36);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -116,58 +129,43 @@ public class Ajouter extends JFrame{
 		contentPane.add(lblCommentaire);
 		
 		
-		JLabel label = new JLabel("Nom de client :");
-		label.setFont(new Font("Tahoma", Font.BOLD, 14));
-		label.setBounds(20, 197, 112, 14);
-		contentPane.add(label);
+		JLabel lblNomClient = new JLabel("Nom de client :");
+		lblNomClient.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblNomClient.setBounds(20, 197, 112, 14);
+		contentPane.add(lblNomClient);
 		
-//		textUtili = new JTextField();
-//		textUtili.setBounds(152, 65, 153, 20);
-//		textUtili.add(textUtili);
-//		textUtili.setColumns(10);
+		txtCommentaire = new JTextField();
+		txtCommentaire.setBounds(152, 242, 153, 72);
+		contentPane.add(txtCommentaire);
+		txtCommentaire.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(152, 242, 153, 72);
-		contentPane.add(textField_3);
-		textField_3.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		textField_1.setColumns(10);
-		textField_1.setBounds(152, 196, 153, 20);
-		contentPane.add(textField_1);
+		txtNomClient = new JTextField();
+		txtNomClient.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtNomClient.setColumns(10);
+		txtNomClient.setBounds(152, 196, 153, 20);
+		contentPane.add(txtNomClient);
 		
 		//SpinnerDateModel
 		
 		SpinnerDateModel spinnerDuree = new SpinnerDateModel();
 		spinnerDuree.setCalendarField(Calendar.MINUTE);
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setModel(spinnerDuree);
-		spinner.setEditor(new JSpinner.DateEditor(spinner, "hh:mm a"));
-		spinner.setBounds(152, 152, 81, 20);
-		contentPane.add(spinner);
+		JSpinner spinnHeure = new JSpinner();
+		spinnHeure.setModel(spinnerDuree);
+		spinnHeure.setEditor(new JSpinner.DateEditor(spinnHeure, "hh:mm a"));
+		spinnHeure.setBounds(152, 152, 81, 20);
+		contentPane.add(spinnHeure);
 		
 		SpinnerDateModel spinnerDate = new SpinnerDateModel();
 		spinnerDate.setCalendarField(Calendar.DAY_OF_YEAR);
 		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setModel(spinnerDate);
-		spinner_1.setEditor(new JSpinner.DateEditor(spinner_1, "yyyy-MM-dd"));
-		spinner_1.setBounds(152, 110, 81, 20);
-		contentPane.add(spinner_1);
+		JSpinner spinnDate = new JSpinner();
+		spinnDate.setModel(spinnerDate);
+		spinnDate.setEditor(new JSpinner.DateEditor(spinnDate, "yyyy-MM-dd"));
+		spinnDate.setBounds(152, 110, 81, 20);
+		contentPane.add(spinnDate);
 		
-		//JComBox
-		
-		
-		/*Manager em = new Manager("utilisateur");
 
-		
-		String[] xx=new String[]{};
-		JComboBox comboBox = new JComboBox(xx);
-		comboBox.setBounds(152, 65, 153, 20);
-		
-		contentPane.add(comboBox);*/
 		
 		//Jbutton
 		
@@ -182,7 +180,7 @@ public class Ajouter extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!textUtili.getText().trim().equals("")){
+				if(!txtNomClient.getText().trim().equals("")){
 					
 					Manager em = new Manager("listerdv");
 					
@@ -192,11 +190,11 @@ public class Ajouter extends JFrame{
 					try {
 						items.values.add(null);
 						//items.values.add(id);
-						//items.values.add(textUtili.getText());
+						items.values.add(txtNomUtilisateur.getText());
 						items.values.add(spinnerDate.getValue());
 						items.values.add(spinnerDuree.getValue());
-						items.values.add(textField_1.getText());
-						items.values.add(textField_3.getText());
+						items.values.add(txtNomClient.getText());
+						items.values.add(txtCommentaire.getText());
 						
 						if(em.Ajouter(items)){
 							JOptionPane.showMessageDialog(null, "Votre RDV a été ajouter !");
@@ -217,6 +215,11 @@ public class Ajouter extends JFrame{
 			}
 		});
 		contentPane.add(btnAjouter);
+		
+		txtNomUtilisateur = new JTextField();
+		txtNomUtilisateur.setBounds(147, 65, 158, 20);
+		contentPane.add(txtNomUtilisateur);
+		txtNomUtilisateur.setColumns(10);
 		
 		
 		
@@ -259,6 +262,4 @@ public class Ajouter extends JFrame{
 		}
 		
 	}	
-		
-	
 }
