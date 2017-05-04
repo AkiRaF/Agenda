@@ -1,6 +1,6 @@
 package iu;
 
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,17 +8,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 
-import com.mysql.fabric.xmlrpc.base.Value;
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
 import Dao.TableEntity;
-import javafx.scene.control.ComboBox;
+
 import manager.Manager;
 import tools.tools;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
+
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
@@ -28,15 +26,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Color;
 
-import javax.swing.Icon;
+
 import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.DropMode;
+
 import javax.swing.JSpinner;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Calendar;
-import javax.swing.JComboBox;
+
 
 public class Ajouter extends JFrame{
 	
